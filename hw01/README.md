@@ -1,24 +1,12 @@
 # Homework 01: Rust Finger Exercises
 
-**Due ~~2016-01-27~~ 2016-01-28, 11:59pm.**
-
-For questions, please post on Piazza (Penn students) or Google Groups (other).
-Links on homepage.
-
 ## Overview ##
 
-In this assignment, you'll get your first crack at writing some short functions
-in a Rust library, building and testing using Cargo, and writing modules. This
-assignment isn't intended to be especially difficult, but will make sure you're
-set up properly in the Rust ecosystem, and will give you some good experience
-using the Rust compiler.
+writing some short functions in a Rust library, building and testing using Cargo, and writing modules. 
+
+이 연습은 러스트 에코시스템에 익숙해 지는것을 목표로 한다
 
 #### Classroom for GitHub
-
-We're using Classroom for GitHub, which manages private homework repositories
-for students. To create your very own private homework repository (owned by
-us), click this link:
-* https://classroom.github.com/assignment-invitations/d7a2cbae7d57de44e29c302c8e353a43
 
 ## Provided Code ##
 
@@ -58,6 +46,14 @@ You can build this project from anywhere in the project tree with
 `cargo build`. Remember to compile periodically as you work.
 
 ### Modules ###
+
+더 진행하기 전에 모듈과 상자에 대해 한 마디 하겠습니다.
+
+크레이트는 모든 Rust 라이브러리 또는 패키지입니다. 모듈은 상자의 내부 논리 섹션
+입니다.
+
+상자의 각 섹션을 다른 모듈로 구성해야 합니다,
+소비자는 필요한 부분만 가져올 수 있습니다. 다음에서 이 작업을 수행할 수 있습니다.
 
 Before you go any further, a word on modules and crates.
 
@@ -115,6 +111,25 @@ Within a module, all members (functions, types, submodules) are private by
 default. The `pub` keyword can also be used to make any of these available from
 outside of the module.
 
+모든 `.rs` 파일은 해당 파일 이름과 동일한 모듈을 정의합니다.
+문제1.rs`는 암시적으로 모듈 `problem1`을 정의합니다.
+
+크레이트는 파일 트리로 구성되며, 일반적으로 하나의 파일이 루트입니다.
+src/lib.rs`(또는 `src/main.rs`). 모듈을 포함하려면 모듈을 상자 루트인
+에 선언해야 합니다. 문제1`을 모듈로 추가하려면 `pub mod problem1;` 줄을 추가합니다.
+줄을 `src/lib.rs` 상단에 추가합니다. (이는 파일 자체에 모듈을 정의하는 것과 동일합니다.
+파일 자체에 모듈을 정의하는 것과 같습니다(`pub mod problem1 { ... }`.) 이 지시어를 추가하기 전까지는,
+카고는 크레이트의 `problem1` 부분을 빌드하려고 시도하지 않습니다. 이 지시어의 `pub` 키워드는
+이 지시어는 `problem1` 모듈을 라이브러리를 임포트하는 다른 모든 크레이트에
+모듈을 노출한다. 모듈을 비공개로 유지하려면 `pub`을 생략할 수 있지만, 모듈을 내보내지 않거나
+함수를 내보내거나 내부적으로 사용하지 않으면 데드 코드 경고가 표시됩니다.
+
+모듈 내에서 모든 멤버(함수, 타입, 서브모듈)는 기본적으로 비공개입니다.
+기본적으로 비공개입니다. 'pub` 키워드를 사용하여 모듈 외부에서
+모듈 외부에서도 사용할 수 있습니다.
+
+Translated with www.DeepL.com/Translator (free version)
+
 ```rust
 // problem1.rs
 
@@ -125,6 +140,30 @@ pub fn sum(slice: &[i32]) -> i32 {
 }
 ```
 
+다른 모듈에서 항목을 가져오는 방법에는 몇 가지가 있습니다:
+
+1. 파일 범위에 '합계'를 추가하려면 파일 상단에 'use problem1::합계'라는 줄을
+   줄을 추가합니다. sum()`으로 함수를 호출할 수 있습니다. 사용해야 하는 부분만
+   만 가져오세요.
+
+2. 모듈에서 여러 항목을 가져오려면 중괄호를 사용합니다:
+   `use problem1::{sum, dedup};`
+
+3. 모듈에서 모든 항목을 가져오려면 `use problem1::*`를 작성합니다.
+
+4. 전체 모듈을 가져오려면 `use problem1;`을 작성합니다. 이 양식을 사용하려면 다음을 수행해야 합니다.
+   모듈 이름으로 모듈의 멤버를 한정해야 합니다(예: `problem1::sum()`).
+   이 방법은 더 장황하지만 범위의 네임스페이스를 오염시키지 않습니다.
+
+시작하기 위해 몇 가지 테스트 케이스가 포함된 `tests_provided.rs` 파일을 제공했습니다.
+파일을 제공했습니다. 이 파일을 라이브러리에 별도의 모듈로 추가해야 합니다.
+모듈과 마찬가지로 라이브러리에 별도의 모듈로 추가해야 합니다(하지만 테스트가 반드시 `pub`일 필요는 없습니다).
+
+모듈에 대한 자세한 내용은 Rust 책에서 확인할 수 있습니다.
+[여기](https://doc.rust-lang.org/book/crates-and-modules.html).
+
+
+Translated with www.DeepL.com/Translator (free version)
 There are a few different ways to import items from a different module:
 
 1. To add `sum` to the scope of a file, add the line `use problem1::sum` to the
@@ -146,207 +185,3 @@ each `problemX` module (but the tests don't need to be `pub`).
 
 You can read more about modules in the Rust book
 [here](https://doc.rust-lang.org/book/crates-and-modules.html).
-
-## Part 02: Basic Functions ##
-
-### Preface ###
-
-For consistency, we ask that you put each problem into its own file, and name
-the file as `problem1.rs`, etc. Remember to declare each module at the top of
-`lib.rs` as well!
-
-### Problem 01: Vector & Slice Manipulation ###
-
-*Vectors, iteration, pass-by-ref, mutability, function pointers.*
-
-Create a new module in your library named `problem1` inside `problem1.rs`.
-
-To get a first taste of basic Rust, complete the following three functions.
-Note that all of these functions take their arguments by reference, rather than
-by value.
-
-Don't use any of the standard library methods on the `Vec` class which implement
-the target behavior, since using them would defeat the point of this exercise
-:). (However, basic functions such as `contains()` and `push()` are fine).
-
-```rust
-/// Computes the sum of all elements in the input i32 slice named `slice`
-pub fn sum(slice: &[i32]) -> i32 {
-    // TODO
-    unimplemented!();
-}
-
-/// Deduplicates items in the input vector `vs`. Produces a vector containing
-/// the first instance of each distinct element of `vs`, preserving the
-/// original order.
-pub fn dedup(vs: &Vec<i32>) -> Vec<i32> {
-    // TODO
-    unimplemented!();
-}
-
-/// Filters a vector `vs` using a predicate `pred` (a function from `i32` to
-/// `bool`). Returns a new vector containing only elements that satisfy `pred`.
-pub fn filter(vs: &Vec<i32>, pred: &Fn(i32) -> bool) -> Vec<i32> {
-    // TODO
-    unimplemented!();
-}
-```
-
-#### Testing
-
-Before you move on, take a look at `tests_provided.rs`.
-
-At the top of this file, there's a `#![cfg(test)]` attribute. `cfg`, short for
-"configuration", is part of how Rust handles conditional compilation. This is
-similar to (but way better than) the use of `#ifdef`s and include guards in C.
-In this case, `#![cfg(test)]` tells the compiler that this module is not to be
-compiled unless the `--test` flag is used with `rustc` (`cargo test` adds this
-flag under the hood). This is handy because it means that you don't have to
-waste time recompiling your tests every time you build unless you're actually
-going to run them.
-
-All of the functions in `test.rs` are annotated with the `#[test]` attribute;
-this tells the compiler that they're tests. Test functions must have the
-signature `fn() -> ()`, or else they will not compile. Tests will be run when
-you invoke `cargo test`.
-
-Any test which doesn't cause a `panic!` is considered to pass. You should use
-[`assert!`][assert] or [`assert_eq!`][assert_eq] to check guarantees and
-equality (respectively).
-
-[assert]: https://doc.rust-lang.org/std/macro.assert!.html
-[assert_eq]: https://doc.rust-lang.org/std/macro.assert_eq!.html
-
-As an aside, the `cfg` attribute has many other uses, like knowing
-which OS or architecture you're compiling for.
-
-We have provided a few tests to start you off with. You should add at least one
-non-trivial test for each function that you implement. Write these in a new
-module, `tests_student.rs`, and declare the module in `lib.rs`.
-
-### Problem 02: Matrix Multiplication ###
-
-*Vectors, iteration, pass-by-reference, structs.*
-
-Create a new module in your library named `problem2` inside `problem2.rs`.
-
-We define a `Matrix` as a type alias to `Vec<Vec<f32>>`. Write a function that
-takes in two `Matrix`es by reference and returns the product `mat1 * mat2`. The
-function signature is provided below.
-
-You should make sure that the two input matrices are actually compatible.
-Remember that you can't multiply two matrices if the number of columns in the
-first matrix is not equal to the number of rows in the second matrix. Use
-`assert!` or `assert_eq!` to `panic!` if this condition is not met.
-
-(Of course, crashing is bad - we'll learn about fixing this later.)
-
-```rust
-/// Represents a matrix in row-major order
-pub type Matrix = Vec<Vec<f32>>;
-
-/// Computes the product of the inputs `mat1` and `mat2`.
-pub fn mat_mult(mat1: &Matrix, mat2: &Matrix) -> Matrix {
-    // TODO
-    unimplemented!();
-}
-```
-
-### Problem 03: Sieve of Eratosthenes ###
-
-*Vectors, iteration, mutability...*
-
-Create a new module in your library named `problem3` inside `problem3.rs`.
-
-The [Sieve of Eratosthenes](https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes)
-is used to find all primes below some given number (`n`), and is an efficient
-way to find small primes.
-
-Iterate through the numbers from `2` to `n`. For each number `i`:
-
-1. If `i` has been crossed-out from previous iterations, skip it.
-2. If `i` isn't crossed-out yet, then it is prime.
-   Cross-out all multiples of `i` from `i*i` to `n`. These are non-prime.
-
-Head over to the Wikipedia page for a more detailed description and some zesty
-examples.
-
-Your function will take a number, `n`, and return a list of all prime numbers
-less than `n`. (Notice that you can't use a Rust array in this case, since you
-don't know the length at compile time.)
-
-```rust
-/// Find all prime numbers less than `n`.
-/// For example, `sieve(7)` should return `[2, 3, 5]`
-pub fn sieve(n: u32) -> Vec<u32> {
-    // TODO
-    unimplemented!();
-}
-```
-
-### Problem 04: Towers of Hanoi ###
-
-*Mutability, type aliases, vecs, tuples, enums.*
-
-[The Towers of Hanoi](https://en.wikipedia.org/wiki/Tower_of_Hanoi) is a
-classical mathematics and computer science puzzle. Imagine you have three pegs,
-one of which holds a stack of discs in increasing size from bottom to top. Your
-goal is to move all of the discs from the first peg to the third peg, using the
-second peg as an intermediate. Your only restrictions are that you may only
-move one disc at a time, and a disc may only be placed on a disc larger than it
-(or on an empty peg). Check out the Wikipedia page for more details and snazzy
-animations.
-
-In this instance, we've provided you with an enum type containing the possible
-names of `Peg`s and a type alias defining a move between two pegs.
-
-This function will take in a number of discs, and the names of the three
-pegs, and return a vector of `Move`s.
-
-```rust
-/// #[derive(...)] statements define certain properties on the enum for you for
-/// free (printing, equality testing, the ability to copy values). More on this
-/// when we cover Enums in detail.
-
-/// You can use any of the variants of the `Peg` enum by writing `Peg::B`, etc.
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub enum Peg {
-    A,
-    B,
-    C,
-}
-
-/// A move between two pegs: (source, destination).
-pub type Move = (Peg, Peg);
-
-/// Solves for the sequence of moves required to move all discs from `src` to
-/// `dst`.
-pub fn hanoi(num_discs: u32, src: Peg, aux: Peg, dst: Peg) -> Vec<Move> {
-    // TODO
-    unimplemented!();
-}
-```
-
-## Submission
-
-Commit and push your work to the master branch of your Classroom for Github
-repository for this HW. **Make sure it is visible on Github!** This is your
-submission. (Work must be in the master branch at the due time.)
-
-Your repository should look like this:
-
-```
-[git root]
-├── Cargo.toml
-└── src
-    ├── lib.rs
-    ├── problem1.rs
-    ├── problem2.rs
-    ├── problem3.rs
-    ├── problem4.rs
-    ├── tests_provided.rs [same as given]
-    └── tests_student.rs [your tests]
-```
-
-`cargo test` should run all of the tests in your homework. Make sure you have
-written at least one test for each function you have written.
